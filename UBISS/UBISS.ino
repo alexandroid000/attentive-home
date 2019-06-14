@@ -46,6 +46,7 @@ void setup() {
 
     // start screen
     tft.begin();
+    tft.setRotation(1);
 
     // attach servo motor, delay so we don't start sending power too soon
     servo1.attach(servoPin);
@@ -67,7 +68,7 @@ void writeText(char str[]) {
   
   tft.fillScreen(ILI9341_WHITE);
   tft.setCursor(0, 0);
-  tft.setTextColor(ILI9341_BLACK);  tft.setTextSize(5);
+  tft.setTextColor(ILI9341_BLACK);  tft.setTextSize(4);
   tft.println(str);
   delay(5000);
   tft.fillScreen(ILI9341_BLACK);
@@ -152,8 +153,6 @@ void loop() {
     currentString = (currentString + 1) % 3;
     spinMotor(-1);
   }
-
-  
   
   delay(2000);
 
