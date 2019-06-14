@@ -3,7 +3,15 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_ILI9341.h>
 
+
+char *myStrings[] = {"Your home is fine.",
+                     "A bird is perched on the maple tree outside your window.",
+                     "Your neighbors also feel overwhelmed sometimes."};
+
+
+int currentString = 0;
 static const int servoPin = 26; // A0
+long num;
 
 
 // LED constants
@@ -49,17 +57,18 @@ void setup() {
     //ledcSetup(LEDC_CHANNEL_0, LEDC_BASE_FREQ, LEDC_TIMER_13_BIT);
     //ledcAttachPin(LED_PIN, LEDC_CHANNEL_0);
 
-
 }
 
 
 
 // text on screen
-void writeText() {
+void writeText(char str[]) {
+
+  
   tft.fillScreen(ILI9341_WHITE);
   tft.setCursor(0, 0);
   tft.setTextColor(ILI9341_BLACK);  tft.setTextSize(5);
-  tft.println("Hello World!");
+  tft.println(str);
   delay(5000);
   tft.fillScreen(ILI9341_BLACK);
 
@@ -74,14 +83,14 @@ void ledcAnalogWrite(uint8_t channel, uint32_t value, uint32_t valueMax = 255) {
   ledcWrite(channel, duty);
 }
 
-void spin_motor(int dir) {
+void spinMotor(int dir) {
 
   // CLOCKWISE SPIN
   if (dir == 1) {
     for(int posDegrees = 0; posDegrees <= 180; posDegrees++) {
         servo1.write(posDegrees);
         Serial.println(posDegrees);
-        delay(30);
+        delay(25);
     }
   }
   // COUNTERCLOCKWISE
@@ -89,7 +98,7 @@ void spin_motor(int dir) {
     for(int posDegrees = 180; posDegrees >= 0; posDegrees--) {
         servo1.write(posDegrees);
         Serial.println(posDegrees);
-        delay(30);
+        delay(25);
     }
   }
   
@@ -120,7 +129,6 @@ void spin_motor(int dir) {
 //}
 
 
-
 void loop() {
 
 //  // set the brightness on LEDC channel 0
@@ -135,16 +143,18 @@ void loop() {
 //  }
 
 
-  int num = random(0,10);
+  num = random(0,10);
 
   if (num == 6) {
-    spin_motor(1);
+    spinMotor(1);
+    writeText(myStrings[currentString]);
     delay(5000);
-    spin_motor(-1);
+    currentString = (currentString + 1) % 3;
+    spinMotor(-1);
   }
 
   
   
-  delay(1000);
+  delay(2000);
 
 }
